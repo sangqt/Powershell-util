@@ -1,0 +1,21 @@
+ansible -i inventory all -m shell -a "ls -ltr /opt/itadmin"
+stapp03 | CHANGED | rc=0 >>
+total 4
+-rw-r--r-- 1 banner banner 167 May 13 04:54 games.tar.gz
+stapp02 | CHANGED | rc=0 >>
+total 4
+-rw-r--r-- 1 steve steve 180 May 13 04:54 games.tar.gz
+stapp01 | CHANGED | rc=0 >>
+total 4
+-rw-r--r-- 1 tony tony 171 May 13 04:54 games.tar.gz
+thor@jump_host ~/ansible$ cat playbook.yml 
+- hosts: all
+  become: yes
+  tasks:
+    - name: make archives file on app servers
+      archive:
+        path: /usr/src/itadmin
+        dest: /opt/itadmin/games.tar.gz
+        format: gz
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
